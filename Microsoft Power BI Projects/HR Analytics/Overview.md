@@ -26,12 +26,12 @@ We collected data from a Industry expert and open source. Following dataset were
 More than 65 DAX were used for this project. Some important DAX are,
 
 <ins>Dynamic Variance %</ins> = 
-// MONTH
-var latestMonth = CALCULATE(MAX('DimDate'[MonthRelative]), 'DimDate'[Date] = MAX(DimEmployee[HireDate])) <br />
+<pre> // MONTH
+ var latestMonth = CALCULATE(MAX('DimDate'[MonthRelative]), 'DimDate'[Date] = MAX(DimEmployee[HireDate])) <br />
 var priorMonthAttr = CALCULATE([% Attrition Rate Date], 'DimDate'[MonthRelative] = latestMonth - 1) <br />
 var latestMonthAttr = CALCULATE([% Attrition Rate Date], 'DimDate'[MonthRelative] = latestMonth) <br />
 var monthAttrChange = DIVIDE(latestMonthAttr - priorMonthAttr, priorMonthAttr) <br />
-var formattedMonthAttr = IF(monthAttrChange < 0, "▼ " & FORMAT(ABS(monthAttrChange), "0.00%"), "▲ " & FORMAT(monthAttrChange, "0.00%")) & " vs previous month" <br />
+var formattedMonthAttr = IF(monthAttrChange < 0, "▼ " & FORMAT(ABS(monthAttrChange), "0.00%"), "▲ " & FORMAT(monthAttrChange, "0.00%")) & " vs previous month" <br /> 
 // QUARTER <br />
 var latestQuarter = CALCULATE(MAX('DimDate'[QuarterRelative]), 'DimDate'[Date] = MAX(DimEmployee[HireDate])) <br />
 var priorQuarterAttr = CALCULATE([% Attrition Rate Date], 'DimDate'[QuarterRelative] = latestQuarter - 1) <br />
@@ -52,7 +52,7 @@ return SWITCH( <br />
             SELECTEDVALUE('DATE'[DATE  Order]) = 1, formattedQuarterAttr, <br />
             SELECTEDVALUE('DATE'[DATE  Order]) = 2, formattedYearAttr, <br />
             BLANK() <br />
-) <br />
+) <br /> </pre>
 
 <ins>Total High_Performer_High_Potential</ins> = CALCULATE(COUNTAX(DimEmployee, DimEmployee[PerformanceNew]), DimEmployee[Attrition] = "No", DimEmployee[PerformanceNew] = "Exceeded Expectations",DimEmployee[PotentialNew]="High")
 
@@ -64,25 +64,25 @@ SUMX(
 
 <ins>Total Meet_Performer_High_Potential</ins> = CALCULATE(COUNTAX(DimEmployee, DimEmployee[PerformanceNew]), DimEmployee[Attrition] = "No",DimEmployee[PerformanceNew] = "Met Expectations",DimEmployee[PotentialNew]="High")
 
-<ins>Total_Meet_Performer_Low_Potential</ins> = <br /> 
+<ins>Total_Meet_Performer_Low_Potential</ins> = <br /> <pre>
 CALCULATE( <br />
     COUNTAX(DimEmployee,DimEmployee[PerformanceNew]),  <br />
     DimEmployee[Attrition/Retention] = "Retention", <br />
     DimEmployee[PerformanceNew] = "Met Expectations", <br />
     DimEmployee[PotentialNew] = "Low" <br />
-)
+) </pre>
 
 <ins>ActiveEmployees</ins> = CALCULATE([TotalEmployees], FILTER(DimEmployee, DimEmployee[Attrition] = "No"))
 
 <ins>InactiveEmployees</ins> = CALCULATE([TotalEmployees], FILTER(DimEmployee, DimEmployee[Attrition] = "Yes"))
 
-<ins>Employee Multirow Details</ins> =  <br />
+<ins>Employee Multirow Details</ins> =  <br /> <pre>
 "Attrition date: " & FORMAT(CALCULATE(MIN('DimEmployee'[HireDate]),DimEmployee[Attrition] = "Yes"), "DD MMM, YYYY") & UNICHAR(10) & <br />
 "Avg. Satisfaction Score: " &ROUND(AVERAGE('FactPerformanceRatingUnpivot'[Satisfaction Score]), 2) & UNICHAR(10) &  <br />
 "Performance Rating: " & MIN(FactPerformanceRating[ManagerRating]) & UNICHAR(10) & <br />
 "Monthly Income: " & MIN(DimEmployee[Salary]) & UNICHAR(10) & <br />
 "Education Level: " & MIN(DimEducationLevel[EducationLevel]) & UNICHAR(10) & <br />
-"Total Stay: " & MIN(Salary[YearsAtCompany]) & UNICHAR(10)  <br />
+"Total Stay: " & MIN(Salary[YearsAtCompany]) & UNICHAR(10)  <br /> </pre>
 
 <ins>EnvironmentSatisfaction</ins> = 
 CALCULATE (
@@ -90,7 +90,7 @@ CALCULATE (
     USERELATIONSHIP ( FactPerformanceRating[EnvironmentSatisfaction], DimSatisfiedLevel[SatisfactionID] )
 )
 
-<ins>Matrix Conditional Formatting</ins> =  <br />
+<ins>Matrix Conditional Formatting</ins> =  <br /> <pre>
 var empCount = CALCULATE(DISTINCTCOUNT('FactPerformanceRatingUnpivot'[EmployeeID])) <br />
 var attRetVal = MIN(DimEmployee[Attrition/Retention]) <br />
 //This switch checks the attrition/retention value and uses a different color set for each <br />
@@ -105,7 +105,7 @@ return SWITCH( <br />
             attRetVal = "Retention" && empCount > 244, "#737070", <br />
             attRetVal = "Retention", "#737070", <br />
         BLANK() <br />
-) <br />
+) <br /> </pre>
 
 ## Data Model
 ![HR Model](https://github.com/user-attachments/assets/a2930665-9a1a-4629-bb4b-5a74f6c58973)
